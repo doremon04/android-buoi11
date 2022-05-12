@@ -40,7 +40,7 @@ public class ContactDAOImpl implements IContactDAO {
 
     @Override
     public Contact selectById(int id) {
-        String sql = "SELECT * FROM tblBook WHERE id = ?";
+        String sql = "SELECT * FROM tblStudent WHERE id = ?";
         Cursor c = mDB.rawQuery(sql, new String[]{String.valueOf(id)});
         while (c.moveToNext()) {
             @SuppressLint("Range") String fullname = c.getString(c.getColumnIndex("fullname"));
