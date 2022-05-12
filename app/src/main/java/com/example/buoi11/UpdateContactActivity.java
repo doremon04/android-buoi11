@@ -1,7 +1,5 @@
 package com.example.buoi11;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -9,42 +7,55 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.buoi11.dao.ContactDAOImpl;
 import com.example.buoi11.dao.IContactDAO;
 import com.example.buoi11.entity.Contact;
+import com.example.buoi11.databinding.ActivityUpdateContactBinding;
 
 public class UpdateContactActivity extends AppCompatActivity {
+
+    private ActivityUpdateContactBinding binding;
+    private int mIDContact;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_update_contact_acitivity);
+        binding = ActivityUpdateContactBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
-        Button button = findViewById(R.id.btnUpdate);
-        button.setOnClickListener(view -> {
-            EditText edtFullname = (EditText) findViewById(R.id.edtFullname);
-            EditText edtPhone = (EditText) findViewById(R.id.edtPhone);
-            EditText edtEmail = (EditText) findViewById(R.id.edtEmail);
+        loadContact();
 
-            String fullname = edtFullname.getText().toString();
-            String phone = edtPhone.getText().toString();
-            String email = edtEmail.getText().toString();
-
-            Contact contact = new Contact(fullname, phone, email);
-            IContactDAO iContactDAO = new ContactDAOImpl(UpdateContactActivity.this);
-            boolean result = iContactDAO.update(contact);
-            if (result) {
-                Toast.makeText(UpdateContactActivity.this, "Update successfully", Toast.LENGTH_SHORT).show();
-
-                // go to main activity
-                Intent intent = new Intent(UpdateContactActivity.this, MainActivity.class);
-                startActivity(intent);
-            }
-            else
-                Toast.makeText(UpdateContactActivity.this, "Update error", Toast.LENGTH_SHORT).show();
-        });
+        binding.btnUpdate.setOnClickListener(view -> update());
     }
-    private void loadContact(){
 
+    private void update() {
+        String fullname = binding.edtFullname.getText().toString();
+        String phone = binding.edtPhone.getText().toString();
+        String email = binding.edtEmail.getText().toString();
+
+        Contact contact = new Contact(mIDContact, fullname, phone, email);
+        IContactDAO iContactDAO = new ContactDAOImpl(UpdateContactActivity.this);
+        boolean result = iContactDAO.update(contact);
+        if (result) {
+            Toast.makeText(UpdateContactActivity.this, "Update successfully", Toast.LENGTH_SHORT).show();
+
+            // go to main activity
+            Intent intent = new Intent(UpdateContactActivity.this, MainActivity.class);
+            startActivity(intent);
+        } else
+            Toast.makeText(UpdateContactActivity.this, "Update error", Toast.LENGTH_SHORT).show();
+    }
+
+    private void loadContact() {
+        int idB = getIntent().getExtras().getInt("idb");
+        IContactDAO contactDAO = new ContactDAOImpl(this);
+        Contact c = contactDAO.selectById(idB);
+        mIDContact = c.getId();
+
+        binding.edtFullname.setText(c.getFullname());
+        binding.edtPhone.setText(c.getPhone());
+        binding.edtEmail.setText(c.getEmail());
     }
 }

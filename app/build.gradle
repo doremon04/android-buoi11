@@ -5,6 +5,11 @@ plugins {
 android {
     compileSdk 31
 
+    // Cài đặt binding view >>> thay thế việc phải gọi findViewById
+    buildFeatures {
+        viewBinding true
+    }
+
     defaultConfig {
         applicationId "com.example.buoi11"
         minSdk 21

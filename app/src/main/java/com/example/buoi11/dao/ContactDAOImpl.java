@@ -8,7 +8,10 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.example.buoi11.entity.Contact;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class ContactDAOImpl implements IContactDAO {
@@ -33,6 +36,21 @@ public class ContactDAOImpl implements IContactDAO {
             list.add(contact);
         }
         return list;
+    }
+
+    @Override
+    public Contact selectById(int id) {
+        String sql = "SELECT * FROM tblBook WHERE id = ?";
+        Cursor c = mDB.rawQuery(sql, new String[]{String.valueOf(id)});
+        while (c.moveToNext()) {
+            @SuppressLint("Range") String fullname = c.getString(c.getColumnIndex("fullname"));
+            @SuppressLint("Range") String phone = c.getString(c.getColumnIndex("phone"));
+            @SuppressLint("Range") String email = c.getString(c.getColumnIndex("email"));
+
+            Contact contact = new Contact(id, fullname, phone, email);
+            return contact;
+        }
+        return null;
     }
 
     @Override

@@ -6,6 +6,7 @@ import java.util.List;
 
 public interface IContactDAO {
     public List<Contact> select();
+    public Contact selectById(int id);
     public boolean insert(Contact c);
     public boolean update(Contact c);
     public boolean delete(int id);
