@@ -53,6 +53,8 @@ public class AdapterContact extends ArrayAdapter<Contact> {
 
         btnUpdate.setOnClickListener(view -> {
             Intent intent = new Intent(mCtx, UpdateContactActivity.class);
+            int idB = c.getId();
+            intent.putExtra("idb", idB);
             mCtx.startActivity(intent);
         });
 
