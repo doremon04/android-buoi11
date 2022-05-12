@@ -13,6 +13,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.example.buoi11.MainActivity;
 import com.example.buoi11.R;
 import com.example.buoi11.UpdateContactActivity;
 import com.example.buoi11.dao.ContactDAOImpl;
@@ -22,8 +23,8 @@ import com.example.buoi11.entity.Contact;
 import java.util.List;
 
 public class AdapterContact extends ArrayAdapter<Contact> {
-    private Context mCtx;
-    private List<Contact> mList;
+    private final Context mCtx;
+    private final List<Contact> mList;
 
     public AdapterContact(@NonNull Context context, @NonNull List<Contact> objects) {
         super(context, R.layout.item_contact, objects);
@@ -50,25 +51,22 @@ public class AdapterContact extends ArrayAdapter<Contact> {
         txtPhone.setText(c.getPhone());
         txtEmail.setText(c.getEmail());
 
-        btnUpdate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(mCtx, UpdateContactActivity.class);
-                mCtx.startActivity(intent);
-
-            }
+        btnUpdate.setOnClickListener(view -> {
+            Intent intent = new Intent(mCtx, UpdateContactActivity.class);
+            mCtx.startActivity(intent);
         });
 
-        btnDelete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                IContactDAO iContactDAO = new ContactDAOImpl(mCtx);
-                boolean result = iContactDAO.delete(c.getId());
-                if (result) {
-                    Toast.makeText(mCtx, "Delete Succesfully", Toast.LENGTH_SHORT).show();
-                    AdapterContact.this.notifyDataSetChanged();
-                } else Toast.makeText(mCtx, "Delete Error", Toast.LENGTH_SHORT).show();
-            }
+        btnDelete.setOnClickListener(view -> {
+            IContactDAO iContactDAO = new ContactDAOImpl(mCtx);
+            boolean result = iContactDAO.delete(c.getId());
+            if (result) {
+                Toast.makeText(mCtx, "Delete Succesfully", Toast.LENGTH_SHORT).show();
+                AdapterContact.this.notifyDataSetChanged();
+
+                // go to main activity
+                Intent intent = new Intent(mCtx, MainActivity.class);
+                mCtx.startActivity(intent);
+            } else Toast.makeText(mCtx, "Delete Error", Toast.LENGTH_SHORT).show();
         });
 
         return v;
